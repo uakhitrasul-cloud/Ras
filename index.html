@@ -1,0 +1,306 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Letter For You</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400;1,500&family=Karla:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #2B1D33;
+    --paper: #FBF3E7;
+    --berry: #A23A5C;
+    --berry-deep: #7C2E46;
+    --gold: #D9A441;
+    --dusk-1: #201A2E;
+    --dusk-2: #3B2748;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; height:100%; }
+  body {
+    min-height: 100vh;
+    display:flex; align-items:center; justify-content:center;
+    background: radial-gradient(ellipse at 50% -10%, var(--dusk-2), var(--dusk-1) 62%);
+    font-family: 'Karla', sans-serif;
+    color: var(--ink);
+    overflow:hidden;
+    position:relative;
+    padding: 24px;
+  }
+
+  .stars { position:absolute; inset:0; pointer-events:none; }
+  .stars span { position:absolute; width:2px; height:2px; background:#fff; border-radius:50%; }
+
+  .card-wrap { position:relative; width:100%; max-width:380px; }
+  .tape {
+    position:absolute; top:-13px; left:50%; transform: translateX(-50%) rotate(-3deg);
+    width:84px; height:26px; background: rgba(162,58,92,0.55);
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 2px 6px rgba(0,0,0,.25);
+    z-index:2;
+  }
+  .card {
+    position:relative;
+    background: var(--paper);
+    border-radius: 6px 6px 26px 6px;
+    padding: 38px 26px 30px;
+    box-shadow: 0 24px 60px -12px rgba(20,10,30,.55), 0 2px 0 rgba(255,255,255,.4) inset;
+    transform-origin: top center;
+    animation: unfold .7s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes unfold {
+    from { transform: scaleY(.15) rotate(-1deg); opacity:0; }
+    to   { transform: scaleY(1) rotate(0deg); opacity:1; }
+  }
+  @media (prefers-reduced-motion: reduce) { .card { animation:none; } }
+
+  .step { display:none; }
+  .step.active { display:block; animation: fadeIn .4s ease both; }
+  @keyframes fadeIn { from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+  @media (prefers-reduced-motion: reduce) { .step.active { animation:none; } }
+
+  h1, h2 { font-family:'Spectral', serif; font-weight:600; margin:0 0 12px; line-height:1.15; }
+  h1 { font-size: 27px; }
+  h2 { font-size: 21px; }
+  p { margin: 0 0 18px; line-height:1.55; }
+  .note-text { font-family:'Spectral', serif; font-style:italic; font-size:17px; color:var(--berry-deep); }
+
+  button {
+    font-family:'Karla', sans-serif; font-weight:700; font-size:15px;
+    border:none; cursor:pointer; border-radius:999px;
+    padding:13px 22px; background:none;
+  }
+  .btn-primary { background: var(--berry); color:#fff; width:100%; }
+  .btn-primary:hover { background: var(--berry-deep); }
+  .btn-primary:disabled { opacity:.35; cursor:not-allowed; }
+  .btn-ghost { background:transparent; color:var(--ink); border:1.5px solid rgba(43,29,51,.25); }
+
+  button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+    outline: 2px solid var(--gold); outline-offset:2px;
+  }
+
+  .envelope { text-align:center; cursor:pointer; }
+  .envelope .seal { font-size:38px; display:block; margin-bottom:12px; }
+  .envelope .btn-primary { width:auto; padding:12px 26px; }
+
+  .yn-row { display:flex; gap:12px; align-items:center; position:relative; height:50px; }
+  .yn-row .btn-primary, .yn-row .btn-ghost { width:auto; }
+  #noBtn { transition: transform .18s ease; }
+
+  .celebrate { text-align:center; }
+  .hearts-burst { font-size:30px; display:block; margin-bottom:8px; }
+
+  .date-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin: 16px 0 20px; }
+  .date-opt {
+    background:#fff; border:1.5px solid rgba(43,29,51,.12); border-radius:12px;
+    padding:14px 8px; text-align:center; cursor:pointer; font-size:13px; font-weight:600;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .date-opt .emoji { display:block; font-size:21px; margin-bottom:6px; }
+  .date-opt.selected { border-color:var(--berry); background: rgba(162,58,92,.08); }
+
+  input[type=text], input[type=date], input[type=time] {
+    width:100%; padding:13px 14px; border-radius:10px; border:1.5px solid rgba(43,29,51,.18);
+    font-family:'Karla',sans-serif; font-size:15px; margin-bottom:14px; background:#fff; color:var(--ink);
+  }
+  .when-row { display:flex; gap:10px; margin-bottom:14px; }
+  .when-row input { flex:1; margin-bottom:0; }
+  input.shake { animation: shake .3s ease; }
+  @keyframes shake { 25%{transform:translateX(-4px);} 75%{transform:translateX(4px);} }
+
+  .fine { font-size:12px; color:rgba(255,255,255,.5); margin-top:16px; text-align:center; }
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="card-wrap">
+  <div class="tape"></div>
+  <div class="card">
+
+    <div class="step active" id="step-envelope">
+      <div class="envelope" id="openEnvelope" role="button" tabindex="0">
+        <span class="seal">💌</span>
+        <h1>A Letter For You</h1>
+        <p>Handwriting's not really my thing, so here's a website instead.</p>
+        <button class="btn-primary" type="button">Open</button>
+      </div>
+    </div>
+
+    <div class="step" id="step-ask">
+      <h2>Hi, <span id="crushName">[Name]</span></h2>
+      <p class="note-text">I keep catching myself wanting to see you for no particular reason. So I'll just ask —</p>
+      <p style="font-weight:700; font-size:17px;">would you like to go for a walk with me?</p>
+      <div class="yn-row">
+        <button class="btn-primary" id="yesBtn" type="button">Yes</button>
+        <button class="btn-ghost" id="noBtn" type="button">No</button>
+      </div>
+    </div>
+
+    <div class="step" id="step-celebrate">
+      <div class="celebrate">
+        <span class="hearts-burst">🎉</span>
+        <h2>Yay!!!</h2>
+        <p>Because of you, I'm now the happiest person alive.</p>
+        <button class="btn-primary" id="toActivity" type="button">Next</button>
+      </div>
+    </div>
+
+    <div class="step" id="step-activity">
+      <h2>What should we do?</h2>
+      <p>Pick whatever sounds fun</p>
+      <div class="date-grid" id="dateGrid">
+        <div class="date-opt" data-val="Coffee"><span class="emoji">☕️</span>Coffee</div>
+        <div class="date-opt" data-val="Dinner"><span class="emoji">🍝</span>Dinner</div>
+        <div class="date-opt" data-val="Movie"><span class="emoji">🎬</span>Movie</div>
+        <div class="date-opt" data-val="Museum"><span class="emoji">🖼️</span>Museum</div>
+        <div class="date-opt" data-val="Walk"><span class="emoji">🌳</span>Walk</div>
+        <div class="date-opt" data-val="Games"><span class="emoji">🎮</span>Games</div>
+      </div>
+      <button class="btn-primary" id="toWhen" type="button" disabled>Next</button>
+    </div>
+
+    <div class="step" id="step-when">
+      <h2>When works for you?</h2>
+      <p>Pick a day and time</p>
+      <div class="when-row">
+        <input type="date" id="walkDate">
+        <input type="time" id="walkTime">
+      </div>
+      <button class="btn-primary" id="toContact" type="button" disabled>Next</button>
+    </div>
+
+    <div class="step" id="step-contact">
+      <h2>How can I reach you?</h2>
+      <p>Phone, Telegram, Instagram — whatever works</p>
+      <input type="text" id="contactInput" placeholder="e.g. @username">
+      <button class="btn-primary" id="sendBtn" type="button">Send</button>
+      <p id="sendError" style="display:none; color:var(--berry-deep); font-size:13px; margin:10px 0 0;">Couldn't send — try again.</p>
+    </div>
+
+    <div class="step" id="step-done">
+      <div class="celebrate">
+        <span class="hearts-burst">💌</span>
+        <h2>All Set!</h2>
+        <p>Thanks for the reply — I'll be in touch about our walk.</p>
+      </div>
+    </div>
+
+  </div>
+  <p class="fine">made with love and a bit of CSS</p>
+</div>
+
+<script>
+(function(){
+  // ---- change this to personalize ----
+  document.getElementById('crushName').textContent = 'Нурай';
+  // -------------------------------------
+
+  const steps = ['envelope','ask','celebrate','activity','when','contact','done'];
+  function show(id){
+    steps.forEach(s => document.getElementById('step-'+s).classList.remove('active'));
+    document.getElementById('step-'+id).classList.add('active');
+  }
+
+  const openEnvelope = document.getElementById('openEnvelope');
+  openEnvelope.addEventListener('click', () => show('ask'));
+  openEnvelope.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show('ask'); }
+  });
+
+  const noBtn = document.getElementById('noBtn');
+  let dodges = 0;
+  function dodge(){
+    if (dodges >= 5) return;
+    dodges++;
+    const row = noBtn.parentElement.getBoundingClientRect();
+    const maxX = Math.max(row.width - noBtn.offsetWidth - 16, 20);
+    const x = Math.random() * maxX - maxX / 2;
+    const y = (Math.random() * 26) - 13;
+    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+  }
+  noBtn.addEventListener('mouseenter', dodge);
+  noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); dodge(); }, {passive:false});
+
+  document.getElementById('yesBtn').addEventListener('click', () => show('celebrate'));
+  document.getElementById('toActivity').addEventListener('click', () => show('activity'));
+
+  const opts = document.querySelectorAll('.date-opt');
+  const toWhen = document.getElementById('toWhen');
+  let selectedActivity = '';
+  opts.forEach(o => o.addEventListener('click', () => {
+    opts.forEach(x => x.classList.remove('selected'));
+    o.classList.add('selected');
+    selectedActivity = o.dataset.val;
+    toWhen.disabled = false;
+  }));
+  toWhen.addEventListener('click', () => show('when'));
+
+  const walkDate = document.getElementById('walkDate');
+  const walkTime = document.getElementById('walkTime');
+  const toContact = document.getElementById('toContact');
+  const today = new Date();
+  walkDate.min = today.toISOString().split('T')[0];
+  function checkWhen(){ toContact.disabled = !(walkDate.value && walkTime.value); }
+  walkDate.addEventListener('change', checkWhen);
+  walkTime.addEventListener('change', checkWhen);
+  toContact.addEventListener('click', () => show('contact'));
+
+  // ---- backend: the message is emailed via formsubmit.co ----
+  const NOTIFY_EMAIL = 'uakhitrasul@gmail.com';
+  // --------------------------------------------------------------
+
+  const contactInput = document.getElementById('contactInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const sendError = document.getElementById('sendError');
+
+  sendBtn.addEventListener('click', async () => {
+    if (!contactInput.value.trim()) {
+      contactInput.classList.remove('shake');
+      void contactInput.offsetWidth;
+      contactInput.classList.add('shake');
+      contactInput.focus();
+      return;
+    }
+    sendError.style.display = 'none';
+    sendBtn.disabled = true;
+    sendBtn.textContent = 'Sending…';
+    try {
+      const formData = new FormData();
+      formData.append('_subject', 'Нурай said YES 💌');
+      formData.append('_captcha', 'false');
+      formData.append('_template', 'table');
+      formData.append('Activity', selectedActivity || 'not chosen');
+      formData.append('Date', walkDate.value);
+      formData.append('Time', walkTime.value);
+      formData.append('Contact', contactInput.value.trim());
+
+      const res = await fetch('https://formsubmit.co/ajax/' + NOTIFY_EMAIL, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      });
+      if (!res.ok) throw new Error('bad status');
+      show('done');
+    } catch (err) {
+      sendError.style.display = 'block';
+      sendBtn.disabled = false;
+      sendBtn.textContent = 'Send';
+    }
+  });
+
+  const starsWrap = document.getElementById('stars');
+  for (let i = 0; i < 36; i++){
+    const s = document.createElement('span');
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.opacity = (Math.random() * 0.6 + 0.2).toFixed(2);
+    starsWrap.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>
