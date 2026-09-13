@@ -131,7 +131,7 @@
     </div>
 
     <div class="step" id="step-ask">
-      <h2>Hi, <span id="crushName">[Name]</span></h2>
+      <h2>Hi, <span id="crushName">[Alisha]</span></h2>
       <p class="note-text">I keep catching myself wanting to see you for no particular reason. So I'll just ask —</p>
       <p style="font-weight:700; font-size:17px;">would you like to go for a walk with me?</p>
       <div class="yn-row">
@@ -196,7 +196,7 @@
 <script>
 (function(){
   // ---- change this to personalize ----
-  document.getElementById('crushName').textContent = 'Нурай';
+  document.getElementById('crushName').textContent = 'Alisha';
   // -------------------------------------
 
   const steps = ['envelope','ask','celebrate','activity','when','contact','done'];
@@ -270,7 +270,7 @@
     sendBtn.textContent = 'Sending…';
     try {
       const formData = new FormData();
-      formData.append('_subject', 'Нурай said YES 💌');
+      formData.append('_subject', 'Alisha said YES 💌');
       formData.append('_captcha', 'false');
       formData.append('_template', 'table');
       formData.append('Activity', selectedActivity || 'not chosen');
